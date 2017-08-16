@@ -27,7 +27,7 @@ class Driver(object):
         self.mailer = Mailer()
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
-        self.mailer.send("Initializing FacebookDriver.")
+        self.mailer.sendMessageText("Initializing FacebookDriver.")
 
         # Set up virtual display for Raspberry Pi compatibility
         self.display = Xvfb()
@@ -78,7 +78,7 @@ class Driver(object):
         self.browser.execute_script("arguments[0].focus();", element)
 
     def loginToFacebook(self):
-        self.mailer.send("Logging in to facebook.")
+        self.mailer.sendMessage("Logging in to facebook.")
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
 
@@ -94,7 +94,7 @@ class Driver(object):
         return
 
     def getPostsFromHashtagPage(self,topic):
-        self.mailer.send("Getting posts from hashtag page.")
+        self.mailer.sendMessage("Getting posts from hashtag page.")
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
 
@@ -102,7 +102,7 @@ class Driver(object):
         self.browser.get(self.hashtagPage.format(topic))
         sleep(5)
         for scrollDownAmount in range(100):
-            self.mailer.send("Getting posts from hashtag page. ("+str(scrollDownAmount)+"/100)")
+            self.mailer.sendMessage("Getting posts from hashtag page. ("+str(scrollDownAmount)+"/100)")
             self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(5)
         return self.browser.find_elements_by_xpath(self.containerXpath)
@@ -129,7 +129,7 @@ class Driver(object):
     def likeEverything(self):
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
-        self.mailer.send("Liking everything on the hashtag page.")
+        self.mailer.sendMessage("Liking everything on the hashtag page.")
 
         print("Liking everything on the hashtag page.")
         selections = self.browser.find_elements_by_xpath(self.likeButtonSubXpath)
@@ -187,7 +187,7 @@ class Driver(object):
         self.loginToFacebook()
         while True:
             for topic in self.topics:
-                self.mailer.send("Selecting next topic: "+topic)
+                self.mailer.sendMessage("Selecting next topic: "+topic)
                 posts = self.getPostsFromHashtagPage(topic)
                 for menu in self.returnAvailableMenus():
                     self.selectAlldaycreative(menu)
