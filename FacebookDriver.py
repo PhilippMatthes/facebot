@@ -27,7 +27,7 @@ class Driver(object):
         self.mailer = Mailer()
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
-        self.mailer.sendMessageText("Initializing FacebookDriver.")
+        self.mailer.sendMessage("Initializing FacebookDriver.")
 
         # Set up virtual display for Raspberry Pi compatibility
         self.display = Xvfb()
