@@ -69,6 +69,7 @@ class Driver(object):
 
         self.browser = webdriver.PhantomJS()
         self.browser.set_window_size(1980,1080)
+        self.log = []
 
     def focus(self,element):
         if self.mailer.getCurrentMessage() == "Stop":
@@ -94,18 +95,28 @@ class Driver(object):
         return
 
     def getPostsFromHashtagPage(self,topic):
-        self.mailer.sendMessage("Getting posts from hashtag page.")
         if self.mailer.getCurrentMessage() == "Stop":
             raise Exception('Stopped by telegram.')
 
         print("Getting posts from hashtag: #"+topic)
         self.browser.get(self.hashtagPage.format(topic))
         sleep(5)
-        for scrollDownAmount in range(10):
-            self.mailer.sendMessage("Getting posts from hashtag page. ("+str(scrollDownAmount)+"/100)")
+        for scrollDownAmount in range(20):
+            if self.mailer.getCurrentMessage() == "Stop":
+                raise Exception('Stopped by telegram.')
+
+            self.mailer.sendMessage("Getting posts from hashtag page. ("+str(scrollDownAmount)+"/20)")
             self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(5)
         return self.browser.find_elements_by_xpath(self.containerXpath)
+
+    def sendStats(self):
+        fig = plt.figure()
+        ax = plt.subplot(111)
+        ax.plot(self.log)
+        save = "likelog/log.png"
+        fig.savefig(save)
+        self.mailer.send_image(save)
 
     def selectAlldaycreative(self,menu):
         if self.mailer.getCurrentMessage() == "Stop":
@@ -133,6 +144,7 @@ class Driver(object):
 
         print("Liking everything on the hashtag page.")
         selections = self.browser.find_elements_by_xpath(self.likeButtonSubXpath)
+        self.log.append(len(selections))
         for selection in selections:
             self.focus(selection)
             selection.click()
@@ -192,4 +204,5 @@ class Driver(object):
                 for menu in self.returnAvailableMenus():
                     self.selectAlldaycreative(menu)
                 self.likeEverything()
+                self.sendStats()
                 # self.commentEverything()

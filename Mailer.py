@@ -16,6 +16,11 @@ class Mailer:
         self.bot = telepot.Bot(self.key)
         self.bot.sendMessage(238370268,text)
 
+    def send_image(self, location):
+        self.bot = telepot.Bot(self.key)
+        with open(location, 'rb') as f:
+            self.bot.sendPhoto(238370268,f)
+
     def getCurrentMessage(self):
         try:
             self.bot = telepot.Bot(self.key)
