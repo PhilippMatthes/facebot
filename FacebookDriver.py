@@ -9,6 +9,7 @@ import pickle # For data management
 import os
 from xvfbwrapper import Xvfb
 from Mailer import Mailer
+import matplotlib.pyplot as plt
 
 # Available comments: the first {} is replaced with the username
 # the second is replaced with a smiley. Note that UTF-8 smileys are only
