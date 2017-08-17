@@ -101,7 +101,7 @@ class Driver(object):
         print("Getting posts from hashtag: #"+topic)
         self.browser.get(self.hashtagPage.format(topic))
         sleep(5)
-        for scrollDownAmount in range(100):
+        for scrollDownAmount in range(10):
             self.mailer.sendMessage("Getting posts from hashtag page. ("+str(scrollDownAmount)+"/100)")
             self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(5)
