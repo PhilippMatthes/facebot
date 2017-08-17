@@ -145,29 +145,33 @@ class Driver(object):
         print("Liking everything on the hashtag page.")
         selections = self.browser.find_elements_by_xpath(self.likeButtonSubXpath)
         self.log.append(len(selections))
+        totalSelections = len(selections)
+        currentSelection = 1
         for selection in selections:
+            self.mailer.sendMessage("Liking post: ("+str(currentSelection)+"/"+str(totalSelections)+")")
             self.focus(selection)
             selection.click()
+            currentSelection += 1
             sleep(5)
 
-    def commentEverything(self):
-        if self.mailer.getCurrentMessage() == "Stop":
-            raise Exception('Stopped by telegram.')
-
-        print("Commenting everything on the hashtag page.")
-        selections = self.browser.find_elements_by_xpath(self.commentButtonSubXpath)
-        for selection in selections:
-            self.focus(selection)
-            selection.click()
-            sleep(1)
-        selections = self.browser.find_elements_by_xpath(self.commentInputSubXpath)
-        for selection in selections:
-            self.focus(selection)
-            query = Tell.comment[randint(0,len(Tell.comment)-1)]
-            say = query.format(Tell.smiley[randint(0,len(Tell.smiley)-1)])
-            selection.send_keys(say)
-            selection.send_keys(Keys.RETURN)
-            sleep(10)
+    # def commentEverything(self):
+    #     if self.mailer.getCurrentMessage() == "Stop":
+    #         raise Exception('Stopped by telegram.')
+    #
+    #     print("Commenting everything on the hashtag page.")
+    #     selections = self.browser.find_elements_by_xpath(self.commentButtonSubXpath)
+    #     for selection in selections:
+    #         self.focus(selection)
+    #         selection.click()
+    #         sleep(1)
+    #     selections = self.browser.find_elements_by_xpath(self.commentInputSubXpath)
+    #     for selection in selections:
+    #         self.focus(selection)
+    #         query = Tell.comment[randint(0,len(Tell.comment)-1)]
+    #         say = query.format(Tell.smiley[randint(0,len(Tell.smiley)-1)])
+    #         selection.send_keys(say)
+    #         selection.send_keys(Keys.RETURN)
+    #         sleep(10)
 
     # def author(self,post):
     #     return post.find_element_by_xpath(self.userNameSubXpath).text
@@ -201,8 +205,13 @@ class Driver(object):
             for topic in self.topics:
                 self.mailer.sendMessage("Selecting next topic: "+topic)
                 posts = self.getPostsFromHashtagPage(topic)
-                for menu in self.returnAvailableMenus():
+                availableMenus = self.returnAvailableMenus()
+                currentMenu = 1
+                totalMenus = len(availableMenus)
+                for menu in availableMenus:
+                    self.mailer.sendMessage("Switching to Alldaycreative. ("+str(currentMenu)+"/"+str(totalMenus)+")")
                     self.selectAlldaycreative(menu)
+                    currentMenu += 1
                 self.likeEverything()
                 self.sendStats()
                 # self.commentEverything()
