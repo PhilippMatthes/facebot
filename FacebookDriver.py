@@ -30,7 +30,7 @@ class Driver(object):
             raise Exception('Stopped by telegram.')
         self.mailer.sendMessage("Initializing FacebookDriver.")
 
-        # Set up virtual display for Raspberry Pi compatibility
+        Set up virtual display for Raspberry Pi compatibility
         self.display = Xvfb()
         self.display.start()
 
@@ -63,13 +63,17 @@ class Driver(object):
         os.system('clear')
 
         # Final setup
-        self.topics = ["graphic","render","cartoon","daily","art","design","cinema4d","animation","cg","illustration"]
+        self.topics = ["render","cartoon","daily","art","design","cinema4d","animation","cg","illustration"]
         self.delay = 30
         self.startUrl = "https://www.facebook.com/login.php"
         self.hashtagPage = "https://www.facebook.com/hashtag/{}"
 
+        # chrome_options = webdriver.ChromeOptions()
+        # prefs = {"profile.default_content_setting_values.notifications" : 2}
+        # chrome_options.add_experimental_option("prefs",prefs)
+        # self.browser = webdriver.Chrome(chrome_options=chrome_options)
         self.browser = webdriver.PhantomJS()
-        self.browser.set_window_size(1980,1080)
+        self.browser.set_window_size(1920,1080)
         self.log = []
 
     def focus(self,element):
@@ -206,13 +210,13 @@ class Driver(object):
             for topic in self.topics:
                 self.mailer.sendMessage("Selecting next topic: "+topic)
                 posts = self.getPostsFromHashtagPage(topic)
-                availableMenus = self.returnAvailableMenus()
-                currentMenu = 1
-                totalMenus = len(availableMenus)
-                for menu in availableMenus:
-                    self.mailer.sendMessage("Switching to Alldaycreative. ("+str(currentMenu)+"/"+str(totalMenus)+")")
-                    self.selectAlldaycreative(menu)
-                    currentMenu += 1
+                # availableMenus = self.returnAvailableMenus()
+                # currentmenu = 1
+                # totalMenus = len(availableMenus)
+                # for menu in availableMenus:
+                #     self.mailer.sendMessage("Switching to Alldaycreative. ("+str(currentMenu)+"/"+str(totalMenus)+")")
+                #     self.selectAlldaycreative(menu)
+                #     currentMenu += 1
                 self.likeEverything()
                 self.sendStats()
                 # self.commentEverything()
